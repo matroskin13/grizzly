@@ -20,7 +20,7 @@ func GetCollectionDir(isDev bool) (string, error) {
 	}
 
 	for _, path := range goPaths {
-		grizzlyPath := filepath.Join(path, GithubRepo)
+		grizzlyPath := filepath.Join(path, "src", GithubRepo)
 
 		fmt.Println("find grizzly in", grizzlyPath)
 
