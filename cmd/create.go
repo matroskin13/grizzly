@@ -24,13 +24,21 @@ func CreateCommand() cli.Command {
 }
 
 func createCommand(c *cli.Context) (err error) {
+	types := map[string]string{}
+
 	modelName := strings.ToLower(c.Args().First());
+
+	for _, blob := range c.Args().Tail() {
+		blobTypes := strings.Split(blob, ":")
+
+		types[blobTypes[0]] = blobTypes[1]
+	}
 
 	if modelName == "" {
 		return cli.NewExitError("model name is empty", 0)
 	}
 
-	code, err := gen.GetCollectionCode(c.Bool("dev"), modelName)
+	code, err := gen.GetCollectionCode(c.Bool("dev"), modelName, types)
 
 	if err != nil {
 		return cli.NewExitError(err, 0)

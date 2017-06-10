@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"strings"
 	"errors"
-	"fmt"
 )
 
 const GithubRepo = "github.com/matroskin13/grizzly"
@@ -22,7 +21,7 @@ func GetCollectionDir(isDev bool) (string, error) {
 	for _, path := range goPaths {
 		grizzlyPath := filepath.Join(path, "src", GithubRepo)
 
-		if !CheckExist(grizzlyPath) {
+		if !CheckExistDir(grizzlyPath) {
 			return filepath.Join(grizzlyPath, "collection/collection.go"), nil
 		}
 	}
@@ -30,7 +29,7 @@ func GetCollectionDir(isDev bool) (string, error) {
 	return "", errors.New("grizzly repo is not defined")
 }
 
-func GetCollectionCode(isDev bool, modelName string) (result string, err error) {
+func GetCollectionCode(isDev bool, modelName string, types map[string]string) (result string, err error) {
 	collectionDir, err := GetCollectionDir(isDev)
 	modelName = strings.Title(modelName)
 
@@ -38,16 +37,25 @@ func GetCollectionCode(isDev bool, modelName string) (result string, err error) 
 		return "", err
 	}
 
-	fmt.Println("find grizzly dir", collectionDir)
-
 	bytes, err := ioutil.ReadFile(collectionDir)
 
 	if err != nil {
 		return result, err
 	}
 
+	var structString = " {\n"
+
+	for key, value := range types {
+		structString += "\t" + strings.Title(key) + " " + value + "\n"
+ 	}
+
+	structString += "}";
+
+	rStruct, _ := regexp.Compile("type Model struct \\{}")
+	code := rStruct.ReplaceAll(bytes, []byte("type Model struct" + structString))
+
 	rModel, _ := regexp.Compile("Model")
-	code := rModel.ReplaceAll(bytes, []byte(modelName))
+	code = rModel.ReplaceAll(code, []byte(modelName))
 
 	rCollections, _ := regexp.Compile("Collection")
 	code = rCollections.ReplaceAll(code, []byte(modelName + "Collection"))
@@ -60,10 +68,20 @@ func GetCollectionCode(isDev bool, modelName string) (result string, err error) 
 	return result, err
 }
 
-func CheckExist(path string) bool {
+func CheckExistDir(path string) bool {
 	_, err := os.Stat(path)
 
 	if err == nil || os.IsNotExist(err) {
+		return false
+	} else {
+		return true
+	}
+}
+
+func CheckExistFile(path string) bool {
+	stat, _ := os.Stat(path)
+
+	if stat == nil {
 		return false
 	} else {
 		return true
@@ -75,16 +93,18 @@ func CreateCollection(modelName string, code string) error {
 	collectionPath := filepath.Join(pwd, "collections")
 	filePath := filepath.Join(collectionPath, modelName + ".go");
 
-	if !CheckExist(collectionPath) {
+	if !CheckExistDir(collectionPath) {
 		os.Mkdir(collectionPath, os.ModePerm)
 	}
 
-	if !CheckExist(filePath) {
+	if !CheckExistFile(filePath) {
 		err := ioutil.WriteFile(filePath, []byte(code), 0666)
 
 		if err != nil {
 			return err
 		}
+	} else {
+		return errors.New("collection is alredy exist")
 	}
 
 	return nil
