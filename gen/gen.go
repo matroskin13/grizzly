@@ -32,6 +32,7 @@ func GetCollectionDir(isDev bool) (string, error) {
 
 func GetCollectionCode(isDev bool, modelName string) (result string, err error) {
 	collectionDir, err := GetCollectionDir(isDev)
+	modelName = strings.Title(modelName)
 
 	if err != nil {
 		return "", err
