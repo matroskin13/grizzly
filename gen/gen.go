@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"errors"
+	"fmt"
 )
 
 const GithubRepo = "github.com/matroskin13/grizzly"
@@ -20,6 +21,8 @@ func GetCollectionDir(isDev bool) (string, error) {
 
 	for _, path := range goPaths {
 		grizzlyPath := filepath.Join(path, GithubRepo)
+
+		fmt.Println("find grizzly in", grizzlyPath)
 
 		if CheckExist(grizzlyPath) {
 			return path, nil
