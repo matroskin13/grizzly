@@ -1,6 +1,6 @@
 package collection
 
-type Model struct {}
+type Model struct {GrizzlyId int; GrizzlyName string}
 
 type Collection struct {
 	Items []*Model
@@ -36,4 +36,24 @@ func (c *Collection) Find(callback SearchCallback) *Model {
 	}
 
 	return nil
+}
+
+func (c *Collection) MapToInt(callback func(item *Model) int) []int {
+	items := []int{}
+
+	for _, v := range c.Items {
+		items = append(items, callback(v))
+	}
+
+	return items
+}
+
+func (c *Collection) MapToString(callback func(item *Model) string) []string {
+	items := []string{}
+
+	for _, v := range c.Items {
+		items = append(items, callback(v))
+	}
+
+	return items
 }
