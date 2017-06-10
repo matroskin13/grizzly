@@ -22,10 +22,8 @@ func GetCollectionDir(isDev bool) (string, error) {
 	for _, path := range goPaths {
 		grizzlyPath := filepath.Join(path, "src", GithubRepo)
 
-		fmt.Println("find grizzly in", grizzlyPath)
-
-		if CheckExist(grizzlyPath) {
-			return path, nil
+		if !CheckExist(grizzlyPath) {
+			return filepath.Join(grizzlyPath, "collection/collection.go"), nil
 		}
 	}
 
@@ -38,6 +36,8 @@ func GetCollectionCode(isDev bool, modelName string) (result string, err error) 
 	if err != nil {
 		return "", err
 	}
+
+	fmt.Println("find grizzly dir", collectionDir)
 
 	bytes, err := ioutil.ReadFile(collectionDir)
 
