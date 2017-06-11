@@ -4,8 +4,7 @@ import (
 	"strings"
 	"github.com/urfave/cli"
 
-	"grizzly/gen"
-
+	"github.com/matroskin13/grizzly/gen"
 )
 
 func UpdateCommand() cli.Command {

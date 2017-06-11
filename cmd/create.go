@@ -5,7 +5,7 @@ import (
 
 	"github.com/urfave/cli"
 
-	"grizzly/gen"
+	"github.com/matroskin13/grizzly/gen"
 )
 
 func CreateCommand() cli.Command {
