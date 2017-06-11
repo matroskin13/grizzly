@@ -45,5 +45,35 @@ func main() {
     fmt.Println(Tom, youngUsersIds)
 }
 
+```
 
+# Generate from config
+
+Create a file grizzly.json in your root directory
+
+```json
+{
+  "collections": [
+    {
+      "name": "User",
+      "types": {
+        "id": "int",
+        "name": "string",
+        "age": "string"
+      }
+    },
+    {
+      "name": "Cities",
+      "types": {
+        "cityId": "int"
+      }
+    }
+  ]
+}
+```
+
+And run the grizzly
+
+```bash
+$ grizzly update
 ```
