@@ -81,6 +81,8 @@ $ grizzly update
 ## Methods of collection
 
 ```go
+type SearchCallback func(item *Model) bool
+
 func NewCollection(items []*Model) *Collection
 
 func (c *Collection) Filter(callback SearchCallback) *Collection
