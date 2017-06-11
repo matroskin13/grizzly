@@ -77,3 +77,27 @@ And run the grizzly
 ```bash
 $ grizzly update
 ```
+
+## Methods of collection
+
+```go
+func NewCollection(items []*Model) *Collection
+
+func (c *Collection) Filter(callback SearchCallback) *Collection
+
+func (c *Collection) Find(callback SearchCallback) *Model
+
+func (c *Collection) Get(index int) (model *Model)
+
+func (c *Collection) MapToInt(callback func(item *Model) int) []int
+
+func (c *Collection) MapToString(callback func(item *Model) string) []string
+
+func (c *Collection) Pop() *Model
+
+func (c *Collection) Push(item *Model) *Collection
+
+func (c *Collection) Shift() *Model
+
+func (c *Collection) Unshift(item *Model) *Collection
+```
