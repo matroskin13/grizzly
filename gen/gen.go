@@ -88,7 +88,7 @@ func CheckExistFile(path string) bool {
 	}
 }
 
-func CreateCollection(modelName string, code string) error {
+func CreateCollection(modelName string, code string, isUpdate bool) error {
 	pwd, _ := os.Getwd()
 	collectionPath := filepath.Join(pwd, "collections")
 	filePath := filepath.Join(collectionPath, modelName + ".go");
@@ -97,7 +97,7 @@ func CreateCollection(modelName string, code string) error {
 		os.Mkdir(collectionPath, os.ModePerm)
 	}
 
-	if !CheckExistFile(filePath) {
+	if !CheckExistFile(filePath) || isUpdate {
 		err := ioutil.WriteFile(filePath, []byte(code), 0666)
 
 		if err != nil {

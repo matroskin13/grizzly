@@ -13,7 +13,7 @@ func CreateCommand() cli.Command {
 		Name: "create",
 		Aliases: []string{"c"},
 		Usage: "create model and collection by name",
-		Action: createCommand,
+		Action: createAction,
 		Flags: []cli.Flag{
 			cli.BoolFlag{
 				Name: "dev",
@@ -23,9 +23,8 @@ func CreateCommand() cli.Command {
 	}
 }
 
-func createCommand(c *cli.Context) (err error) {
+func createAction(c *cli.Context) (err error) {
 	types := map[string]string{}
-
 	modelName := strings.ToLower(c.Args().First());
 
 	for _, blob := range c.Args().Tail() {
@@ -44,7 +43,7 @@ func createCommand(c *cli.Context) (err error) {
 		return cli.NewExitError(err, 0)
 	}
 
-	err = gen.CreateCollection(modelName, code)
+	err = gen.CreateCollection(modelName, code, false)
 
 	if err != nil {
 		return cli.NewExitError(err, 0)
