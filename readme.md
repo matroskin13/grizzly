@@ -1,6 +1,6 @@
 ## Grizzly codegen
 
-### Generate collections
+### Generation of collections
 
 ```bash
 go get github.com/matroskin13/grizzly
@@ -12,7 +12,7 @@ or
 grizzly create user id:int name:string age:int
 ```
 
-### Usage collections after generate
+### Use of collections after generation
 
 ```go
 
