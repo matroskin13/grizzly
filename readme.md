@@ -59,7 +59,7 @@ Create a file grizzly.json in your root directory
       "types": {
         "id": "int",
         "name": "string",
-        "age": "string"
+        "age": "int"
       }
     },
     {
