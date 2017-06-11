@@ -3,13 +3,12 @@
 ### Generation of collections
 
 ```bash
-go get github.com/matroskin13/grizzly
+$ go get github.com/matroskin13/grizzly
 
-$GOPATH/bin/grizzly create users id:int name:string
-
+$ grizzly create user id:int name:string age:int
 or
+$ $GOPATH/bin/grizzly create users id:int name:string age:int
 
-grizzly create user id:int name:string age:int
 ```
 
 ### Use of collections after generation
