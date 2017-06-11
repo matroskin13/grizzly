@@ -54,6 +54,9 @@ func GetCollectionCode(isDev bool, modelName string, types map[string]string) (r
 	rStruct, _ := regexp.Compile("type Model struct \\{GrizzlyId int; GrizzlyName string}")
 	code := rStruct.ReplaceAll(bytes, []byte("type Model struct" + structString))
 
+	rSearchCallback, _ := regexp.Compile("SearchCallback")
+	code = rSearchCallback.ReplaceAll(code, []byte("SearchCallback" + strings.Title(modelName)))
+
 	rModel, _ := regexp.Compile("Model")
 	code = rModel.ReplaceAll(code, []byte(modelName))
 
