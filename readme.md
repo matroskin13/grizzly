@@ -55,7 +55,7 @@ Create a file grizzly.json in your root directory
 {
   "collections": [
     {
-      "name": "User",
+      "name": "user",
       "types": {
         "id": "int",
         "name": "string",
@@ -63,7 +63,7 @@ Create a file grizzly.json in your root directory
       }
     },
     {
-      "name": "Cities",
+      "name": "city",
       "types": {
         "cityId": "int"
       }
