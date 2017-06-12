@@ -1,6 +1,5 @@
 dependency:
 	go get -t -v ./...
-	dep ensure -update
 
 test:
 	echo "" > coverage.txt
