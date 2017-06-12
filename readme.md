@@ -18,7 +18,7 @@ $ $GOPATH/bin/grizzly create users id:int name:string age:int
 
 ```go
 
-package main
+package test
 
 import (
     "fmt"
