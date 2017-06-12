@@ -1,6 +1,8 @@
-## Grizzly codegen
+# Grizzly codegen
 
-### Generation of collections
+[![Build Status](https://travis-ci.org/matroskin13/grizzly.svg?branch=master)](https://travis-ci.org/matroskin13/grizzly)
+
+## Generation of collections
 
 ```bash
 $ go get github.com/matroskin13/grizzly
@@ -11,7 +13,7 @@ $ $GOPATH/bin/grizzly create users id:int name:string age:int
 
 ```
 
-### Use of collections after generation
+## Use of collections after generation
 
 ```go
 
