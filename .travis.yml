@@ -1,14 +1,14 @@
 language: go
-sudo: false
 go:
-  - 1.8.x
+  - 1.7
+  - 1.8
   - tip
 
-before_install:
-  - go get -t -v ./...
+install:
+  - make dependency
 
 script:
-  - ./go.test.sh
+  - make test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
