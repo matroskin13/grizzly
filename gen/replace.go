@@ -39,3 +39,10 @@ func ReplaceCollection(code []byte, modelName string) []byte {
 
 	return result
 }
+
+func ReplaceGrizzlyId(code []byte, customType string) []byte {
+	gICollections, _ := regexp.Compile("GrizzlyId")
+	result := gICollections.ReplaceAll(code, []byte(strings.Title(customType)))
+
+	return result
+}
