@@ -16,6 +16,7 @@ const (
 	MethodMaps = "maps"
 	MethodArray = "array"
 	MethodGet = "get"
+	MethodUniq = "uniq"
 )
 
 func GetDefaultMethods() []string {
@@ -25,7 +26,18 @@ func GetDefaultMethods() []string {
 		MethodMaps,
 		MethodArray,
 		MethodGet,
+		MethodUniq,
 	}
+}
+
+func IsPropertyMethod(method string) bool {
+	for _, propertyMethod := range []string{MethodUniq} {
+		if propertyMethod == method {
+			return true
+		}
+	}
+
+	return false
 }
 
 func GetCollectionDir(isDev bool) (string, error) {
@@ -106,7 +118,7 @@ func CreateCollection(modelName string, code string, isUpdate bool) error {
 	return nil
 }
 
-func GetMethodsCode(methods []string) (result []byte, err error) {
+func GetMethodsCode(methods []string, types map[string]string) (result []byte, err error) {
 	collectionDir, err := GetCollectionDir(false)
 
 	if err != nil {
@@ -122,7 +134,14 @@ func GetMethodsCode(methods []string) (result []byte, err error) {
 			return result, err
 		}
 
-		result = append(result, bytes...)
+		if IsPropertyMethod(v) {
+			for key := range types {
+				result = append(result, ReplaceGrizzlyId(bytes, key)...)
+			}
+
+		} else {
+			result = append(result, bytes...)
+		}
 	}
 
 	return result, err
@@ -135,7 +154,7 @@ func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error
 		return result, err
 	}
 
-	methodCode, err := GetMethodsCode(config.Methods)
+	methodCode, err := GetMethodsCode(config.Methods, config.Types)
 
 	code = append(code, methodCode...)
 
