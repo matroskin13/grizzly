@@ -13,12 +13,6 @@ func UpdateCommand() cli.Command {
 		Aliases: []string{"u"},
 		Usage: "update collections by config",
 		Action: updateAction,
-		Flags: []cli.Flag{
-			cli.BoolFlag{
-				Name: "dev",
-				Usage: "set development mode",
-			},
-		},
 	}
 }
 
@@ -34,7 +28,11 @@ func updateAction(c *cli.Context) (err error) {
 			return cli.NewExitError("collection name is empty", 0)
 		}
 
-		code, err := gen.GetCollectionCode(c.Bool("dev"), strings.ToLower(collection.Name), collection.Types)
+		if len(collection.Methods) == 0 {
+			collection.Methods = gen.GetDefaultMethods()
+		}
+
+		code, err := gen.GenCollectionCode(collection)
 
 		if err != nil {
 			return cli.NewExitError(err, 0)

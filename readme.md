@@ -78,6 +78,22 @@ And run the grizzly
 $ grizzly update
 ```
 
+You can also specify the required methods:
+
+```json
+{
+  "name": "User",
+  "types": {
+    "id": "int",
+    "name": "string",
+    "age": "int"
+  },
+  "methods": ["find", "filter"]
+}
+```
+
+List of default methods:  "find", "filter", "maps", "array", "get"
+
 ## Methods of collection
 
 ```go

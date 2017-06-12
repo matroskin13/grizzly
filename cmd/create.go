@@ -14,12 +14,6 @@ func CreateCommand() cli.Command {
 		Aliases: []string{"c"},
 		Usage: "create model and collection by name",
 		Action: createAction,
-		Flags: []cli.Flag{
-			cli.BoolFlag{
-				Name: "dev",
-				Usage: "set development mode",
-			},
-		},
 	}
 }
 
@@ -37,13 +31,19 @@ func createAction(c *cli.Context) (err error) {
 		return cli.NewExitError("model name is empty", 0)
 	}
 
-	code, err := gen.GetCollectionCode(c.Bool("dev"), modelName, types)
+	collectionConfig := gen.GrizzlyConfigCollection{
+		Types: types,
+		Name: modelName,
+		Methods: gen.GetDefaultMethods(),
+	}
+
+	code, err := gen.GenCollectionCode(collectionConfig)
 
 	if err != nil {
 		return cli.NewExitError(err, 0)
 	}
 
-	err = gen.CreateCollection(modelName, code, false)
+	err = gen.CreateCollection(modelName, string(code), false)
 
 	if err != nil {
 		return cli.NewExitError(err, 0)

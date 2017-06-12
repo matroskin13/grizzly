@@ -10,6 +10,7 @@ import (
 type GrizzlyConfigCollection struct {
 	Name string `json:"name"`
 	Types map[string]string `json:"types"`
+	Methods []string
 }
 
 type GrizzlyConfig struct {
