@@ -47,7 +47,7 @@ func main() {
 
 ```
 
-# Generate from config
+## Generate from config
 
 Create a file grizzly.json in your root directory
 
