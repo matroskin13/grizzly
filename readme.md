@@ -29,8 +29,14 @@ func main() {
     users := collections.NewUserCollection([]*collections.User{
         {Id: 1, Name: "John", Age: 20},
         {Id: 2, Name: "Tom", Age: 22},
-        {Id: 3, Name: "Billy", Age: 19},
+        {Id: 3, Name: "Billy", Age: 20},
         {Id: 4, Name: "Mister X", Age: 30},
+    })
+
+    city := collections.NewCitiesCollection([]*collections.Cities{
+        {CityId: 1},
+    }).Find(func (city *collections.Cities) bool {
+        return true
     })
 
     youngUsers := users.Filter(func (user *collections.User) bool {
@@ -45,9 +51,17 @@ func main() {
         return user.Id
     })
 
-    fmt.Println(Tom, youngUsersIds)
-}
+    uniqAges := users.UniqByAge()
+    sortedAges := users.SortByAge("asc").MapToInt(func (user *collections.User) int {
+        return user.Age
+    })
 
+    fmt.Println("tom", Tom)
+    fmt.Println("young users ids", youngUsersIds)
+    fmt.Println("first city", city)
+    fmt.Println("uniq ages", uniqAges)
+    fmt.Println("sorted ages", sortedAges)
+}
 ```
 
 ## Generate from config
@@ -95,30 +109,63 @@ You can also specify the required methods:
 }
 ```
 
-List of default methods:  "find", "filter", "maps", "array", "get"
+List of default methods:  "find", "filter", "maps", "array", "get", "uniq", "sort"
 
 ## Methods of collection
 
+The following methods will be available for the collection:
+
+```json
+{
+  "collections": [
+    {
+      "name": "Users",
+      "types": {
+        "id": "int",
+        "name": "string"
+      }
+    }
+  ]
+}
+```
+
 ```go
-type SearchCallback func(item *Model) bool
+type SearchCallbackUsers func(item *Users) bool
 
-func NewCollection(items []*Model) *Collection
+type Users struct {
+    Id   int
+    Name string
+}
 
-func (c *Collection) Filter(callback SearchCallback) *Collection
+type UsersCollection struct {
+    Items []*Users
+}
 
-func (c *Collection) Find(callback SearchCallback) *Model
+func NewUsersCollection(items []*Users) *UsersCollection
 
-func (c *Collection) Get(index int) (model *Model)
+func (c *UsersCollection) Filter(callback SearchCallbackUsers) *UsersCollection
 
-func (c *Collection) MapToInt(callback func(item *Model) int) []int
+func (c *UsersCollection) Find(callback SearchCallbackUsers) *Users
 
-func (c *Collection) MapToString(callback func(item *Model) string) []string
+func (c *UsersCollection) Get(index int) (model *Users)
 
-func (c *Collection) Pop() *Model
+func (c *UsersCollection) MapToInt(callback func(item *Users) int) []int
 
-func (c *Collection) Push(item *Model) *Collection
+func (c *UsersCollection) MapToString(callback func(item *Users) string) []string
 
-func (c *Collection) Shift() *Model
+func (c *UsersCollection) Pop() *Users
 
-func (c *Collection) Unshift(item *Model) *Collection
+func (c *UsersCollection) Push(item *Users) *UsersCollection
+
+func (c *UsersCollection) Shift() *Users
+
+func (c *UsersCollection) SortById(mode string) *UsersCollection
+
+func (c *UsersCollection) SortByName(mode string) *UsersCollection
+
+func (c *UsersCollection) UniqById() *UsersCollection
+
+func (c *UsersCollection) UniqByName() *UsersCollection
+
+func (c *UsersCollection) Unshift(item *Users) *UsersCollection
 ```
