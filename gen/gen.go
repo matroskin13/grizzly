@@ -17,6 +17,7 @@ const (
 	MethodArray = "array"
 	MethodGet = "get"
 	MethodUniq = "uniq"
+	MethodSort = "sort"
 )
 
 func GetDefaultMethods() []string {
@@ -27,17 +28,29 @@ func GetDefaultMethods() []string {
 		MethodArray,
 		MethodGet,
 		MethodUniq,
+		MethodSort,
 	}
 }
 
 func IsPropertyMethod(method string) bool {
-	for _, propertyMethod := range []string{MethodUniq} {
+	for _, propertyMethod := range []string{MethodUniq, MethodSort} {
 		if propertyMethod == method {
 			return true
 		}
 	}
 
 	return false
+}
+
+func GetImportsByMethods(methods []string) (imports []string) {
+	for _, method := range methods {
+		switch method {
+		case MethodSort:
+			imports = append(imports, "sort")
+		}
+	}
+
+	return imports
 }
 
 func GetCollectionDir(isDev bool) (string, error) {
@@ -138,7 +151,6 @@ func GetMethodsCode(methods []string, types map[string]string) (result []byte, e
 			for key := range types {
 				result = append(result, ReplaceGrizzlyId(bytes, key)...)
 			}
-
 		} else {
 			result = append(result, bytes...)
 		}
@@ -165,6 +177,8 @@ func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error
 	code = ReplaceModel(code, config.Name, config.Types)
 	code = ReplaceSearchCallback(code, config.Name)
 	code = ReplaceCollection(code, config.Name)
+	code = ReplaceImports(code)
+	code = InjectImports(code, GetImportsByMethods(config.Methods))
 
 	code = append([]byte("package collections"), code...)
 

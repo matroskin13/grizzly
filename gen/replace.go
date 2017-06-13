@@ -46,3 +46,20 @@ func ReplaceGrizzlyId(code []byte, customType string) []byte {
 
 	return result
 }
+
+func ReplaceImports(code []byte) []byte {
+	rICollections, _ := regexp.Compile("(import \"sort\")")
+	result := rICollections.ReplaceAll(code, []byte(""))
+
+	return result
+}
+
+func InjectImports(code []byte, imports []string) (result []byte) {
+	result = code[:]
+
+	for _, i := range imports {
+		result = append([]byte("\nimport \"" + i + "\"\n"), code...)
+	}
+
+	return result
+}
