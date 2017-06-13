@@ -168,4 +168,6 @@ func (c *UsersCollection) UniqById() *UsersCollection
 func (c *UsersCollection) UniqByName() *UsersCollection
 
 func (c *UsersCollection) Unshift(item *Users) *UsersCollection
+
+func (c *Collection) ForEach(callback func(item *Model))
 ```
