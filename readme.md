@@ -109,7 +109,7 @@ You can also specify the required methods:
 }
 ```
 
-List of default methods:  "find", "filter", "maps", "array", "get"
+List of default methods:  "find", "filter", "maps", "array", "get", "uniq", "sort"
 
 ## Methods of collection
 
