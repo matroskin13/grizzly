@@ -24,3 +24,9 @@ func TestNewCollection(t *testing.T) {
 	assert.Equal(t, expected, collection)
 }
 
+
+func TestNewEmptyCollection(t *testing.T) {
+	collection := NewEmptyCollection()
+
+	assert.Len(t, collection.Items, 0)
+}
