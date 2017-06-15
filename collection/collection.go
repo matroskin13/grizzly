@@ -15,3 +15,7 @@ func NewCollection(items []*Model) *Collection {
 
 	return &collection
 }
+
+func NewEmptyCollection() *Collection {
+	return &Collection{}
+}
