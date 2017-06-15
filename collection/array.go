@@ -25,3 +25,7 @@ func (c *Collection) Unshift(item *Model) *Collection {
 
 	return &Collection{Items: newItems}
 }
+
+func (c *Collection) Len() int {
+	return len(c.Items)
+}
