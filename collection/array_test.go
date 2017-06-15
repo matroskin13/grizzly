@@ -36,3 +36,13 @@ func TestCollection_Shift(t *testing.T) {
 	assert.Len(t, collection.Items, 3)
 	assert.Equal(t, collection.Get(2).GrizzlyId, 4)
 }
+
+func TestByGrizzlyIdAsc_Len(t *testing.T) {
+	collection := GetCollection()
+
+	assert.Equal(t, collection.Len(), 4)
+
+	collection.Shift()
+
+	assert.Equal(t, collection.Len(), 3)
+}
