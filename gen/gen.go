@@ -133,7 +133,7 @@ func CreateCollection(modelName string, code string, isUpdate bool) error {
 	return nil
 }
 
-func GetMethodsCode(methods []string, types map[string]string) (result []byte, err error) {
+func GetMethodsCode(methods []string, types []GrizzlyType) (result []byte, err error) {
 	collectionDir, err := GetCollectionDir(false)
 
 	if err != nil {
@@ -150,8 +150,10 @@ func GetMethodsCode(methods []string, types map[string]string) (result []byte, e
 		}
 
 		if IsPropertyMethod(v) {
-			for key := range types {
-				result = append(result, ReplaceGrizzlyId(bytes, key)...)
+			for _, customType := range types {
+				if customType.IsPrimitive {
+					result = append(result, ReplaceGrizzlyId(bytes, customType.Name)...)
+				}
 			}
 		} else {
 			result = append(result, bytes...)
@@ -163,12 +165,13 @@ func GetMethodsCode(methods []string, types map[string]string) (result []byte, e
 
 func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error) {
 	code, err := GetCollectionCode()
+	types := GenerateTypes(config.Types)
 
 	if err != nil {
 		return result, err
 	}
 
-	methodCode, err := GetMethodsCode(config.Methods, config.Types)
+	methodCode, err := GetMethodsCode(config.Methods, types)
 
 	code = append(code, methodCode...)
 
