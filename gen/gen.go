@@ -111,9 +111,17 @@ func CheckExistFile(path string) bool {
 	}
 }
 
-func CreateCollection(modelName string, code string, isUpdate bool) error {
+func CreateCollection(modelName string, code string, isUpdate bool, savePath string) error {
+	var collectionPath string
+
 	pwd, _ := os.Getwd()
-	collectionPath := filepath.Join(pwd, "collections")
+
+	if savePath == "" {
+		collectionPath = filepath.Join(pwd, "collections")
+	} else {
+		collectionPath = savePath
+	}
+
 	filePath := filepath.Join(collectionPath, modelName + ".go");
 
 	if !CheckExistDir(collectionPath) {

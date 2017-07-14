@@ -38,7 +38,7 @@ func updateAction(c *cli.Context) (err error) {
 			return cli.NewExitError(err, 0)
 		}
 
-		err = gen.CreateCollection(strings.ToLower(collection.Name), code, true)
+		err = gen.CreateCollection(strings.ToLower(collection.Name), code, true, "")
 
 		if err != nil {
 			return cli.NewExitError(err, 0)
