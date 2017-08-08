@@ -38,15 +38,6 @@ import (
 	"github.com/matroskin13/grizzly/cmd"
 )
 
-//go:generate go run main.go generate main.go
-
-//grizzly:generate
-type Test struct {
-	Id int // user id
-	Name string // user name
-	Email string
-}
-
 func main() {
 	cmd.Init()
 }

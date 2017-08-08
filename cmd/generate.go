@@ -61,7 +61,7 @@ func generateAction(c *cli.Context) (err error) {
 		switch x := n.(type) {
 		case *ast.GenDecl:
 			if x.Tok == token.TYPE && grizzlyComment(x.Doc) {
-				itemConfig := gen.GrizzlyConfigCollection{Types: map[string]string{}}
+				itemConfig := gen.GrizzlyConfigCollection{Types: map[string]string{}, Package: f.Name.Name}
 
 				ast.Inspect(x, func (n ast.Node) bool {
 					switch x := n.(type) {
@@ -91,7 +91,7 @@ func generateAction(c *cli.Context) (err error) {
 			collection.Methods = gen.GetDefaultMethods()
 		}
 
-		code, err := gen.GenCollectionCode(collection)
+		code, err := gen.GenCollectionCode(collection, true)
 
 		if err != nil {
 			return cli.NewExitError(err, 0)

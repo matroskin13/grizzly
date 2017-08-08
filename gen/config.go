@@ -11,6 +11,7 @@ type GrizzlyConfigCollection struct {
 	Name string `json:"name"`
 	Types map[string]string `json:"types"`
 	Methods []string
+	Package string
 }
 
 type GrizzlyConfig struct {

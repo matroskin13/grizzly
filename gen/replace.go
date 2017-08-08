@@ -5,17 +5,24 @@ import (
 	"strings"
 )
 
-func ReplaceModel(code []byte, modelName string, types map[string]string) []byte {
-	var structString = " {\n"
-
-	for key, value := range types {
-		structString += "\t" + strings.Title(key) + " " + value + "\n"
-	}
-
-	structString += "}";
-
+func ReplaceModel(code []byte, modelName string, types map[string]string, isSimple bool) []byte {
 	r, _ := regexp.Compile("type Model struct \\{GrizzlyId int; GrizzlyName string}")
-	result := r.ReplaceAll(code, []byte("type Model struct" + structString))
+
+	var result []byte
+
+	if isSimple == false {
+		var structString = " {\n"
+
+		for key, value := range types {
+			structString += "\t" + strings.Title(key) + " " + value + "\n"
+		}
+
+		structString += "}";
+
+		result = r.ReplaceAll(code, []byte("type Model struct" + structString))
+	} else {
+		result = r.ReplaceAll(code, []byte(""))
+	}
 
 	rModel, _ := regexp.Compile("Model")
 	result = rModel.ReplaceAll(result, []byte(strings.Title(modelName)))

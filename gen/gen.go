@@ -171,7 +171,7 @@ func GetMethodsCode(methods []string, types []GrizzlyType) (result []byte, err e
 	return result, err
 }
 
-func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error) {
+func GenCollectionCode(config GrizzlyConfigCollection, isSimple bool) (result string, err error) {
 	code, err := GetCollectionCode()
 	types := GenerateTypes(config.Types)
 
@@ -187,13 +187,13 @@ func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error
 		return result, err
 	}
 
-	code = ReplaceModel(code, config.Name, config.Types)
+	code = ReplaceModel(code, config.Name, config.Types, isSimple)
 	code = ReplaceSearchCallback(code, config.Name)
 	code = ReplaceCollection(code, config.Name)
 	code = ReplaceImports(code)
 	code = InjectImports(code, GetImportsByMethods(config.Methods))
 
-	code = append([]byte("package collections"), code...)
+	code = append([]byte("package " + config.Package), code...)
 
 	return string(code), err
 }

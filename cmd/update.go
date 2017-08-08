@@ -32,7 +32,7 @@ func updateAction(c *cli.Context) (err error) {
 			collection.Methods = gen.GetDefaultMethods()
 		}
 
-		code, err := gen.GenCollectionCode(collection)
+		code, err := gen.GenCollectionCode(collection, false)
 
 		if err != nil {
 			return cli.NewExitError(err, 0)
