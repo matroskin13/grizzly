@@ -2,8 +2,12 @@ package cmd
 
 import (
 	"strings"
-	"github.com/urfave/cli"
+	"os"
+	"path/filepath"
+	"io/ioutil"
+	"encoding/json"
 
+	"github.com/urfave/cli"
 	"github.com/matroskin13/grizzly/gen"
 )
 
@@ -17,9 +21,20 @@ func UpdateCommand() cli.Command {
 }
 
 func updateAction(c *cli.Context) (err error) {
-	config, err := gen.GetConfig()
+	var config gen.GrizzlyConfig
 
-	if err != nil || config == nil {
+	currentPath, _ := os.Getwd()
+	fullPwd := filepath.Join(currentPath, "grizzly.json")
+
+	bytes, err := ioutil.ReadFile(fullPwd)
+
+	if err != nil {
+		return cli.NewExitError(err, 0)
+	}
+
+	err = json.Unmarshal(bytes, &config)
+
+	if err != nil {
 		return cli.NewExitError("config is not readable", 0)
 	}
 

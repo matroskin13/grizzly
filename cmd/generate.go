@@ -6,8 +6,6 @@ import (
 
 	"os"
 	"path/filepath"
-	"go/parser"
-	"go/token"
 	"io/ioutil"
 	"go/ast"
 	"strings"
@@ -47,44 +45,11 @@ func generateAction(c *cli.Context) (err error) {
 		return cli.NewExitError(err, 0)
 	}
 
-	fset := token.NewFileSet()
-
-	f, err := parser.ParseFile(fset, generateFileName, string(file), parser.ParseComments)
+	config, err := gen.GetConfigByCode(file)
 
 	if err != nil {
 		return cli.NewExitError(err, 0)
 	}
-
-	var config gen.GrizzlyConfig
-
-	ast.Inspect(f, func (n ast.Node) bool {
-		switch x := n.(type) {
-		case *ast.GenDecl:
-			if x.Tok == token.TYPE && grizzlyComment(x.Doc) {
-				itemConfig := gen.GrizzlyConfigCollection{Types: map[string]string{}, Package: f.Name.Name}
-
-				ast.Inspect(x, func (n ast.Node) bool {
-					switch x := n.(type) {
-					case *ast.Field:
-						switch y := x.Type.(type) {
-						case *ast.Ident:
-							itemConfig.Types[x.Names[0].Name] = y.Name
-						}
-					case *ast.Ident:
-						if itemConfig.Name == "" {
-							itemConfig.Name = x.Name
-						}
-					}
-
-					return true
-				})
-
-				config.Collections = append(config.Collections, itemConfig)
-			}
-		}
-
-		return true
-	})
 
 	for _, collection := range config.Collections {
 		if len(collection.Methods) == 0 {

@@ -1,11 +1,24 @@
 package gen
 
 import (
-	"os"
-	"path/filepath"
-	"io/ioutil"
-	"encoding/json"
+	"go/ast"
+	"go/token"
+	"go/parser"
 )
+
+func grizzlyComment(doc *ast.CommentGroup) bool {
+	if doc == nil {
+		return false
+	}
+
+	for _, comment := range doc.List {
+		if comment.Text == "//grizzly:generate" {
+			return true
+		}
+	}
+
+	return false
+}
 
 type GrizzlyConfigCollection struct {
 	Name string `json:"name"`
@@ -18,21 +31,47 @@ type GrizzlyConfig struct {
 	Collections []GrizzlyConfigCollection `json:"collections"`
 }
 
-func GetConfig() (config *GrizzlyConfig, err error) {
-	currentPath, _ := os.Getwd();
-	fullPwd := filepath.Join(currentPath, "grizzly.json")
+// Create config from GO code
+func GetConfigByCode(code []byte) (*GrizzlyConfig, error) {
+	var config GrizzlyConfig
 
-	bytes, err := ioutil.ReadFile(fullPwd)
+	fset := token.NewFileSet()
 
-	if err != nil {
-		return config, err
-	}
-
-	err = json.Unmarshal(bytes, &config)
+	f, err := parser.ParseFile(fset, "main.go", string(code), parser.ParseComments)
 
 	if err != nil {
-		return config, err
+		return nil, err
 	}
 
-	return config, err
+	ast.Inspect(f, func (n ast.Node) bool {
+		if x, ok := n.(*ast.GenDecl); ok && x.Tok == token.TYPE && grizzlyComment(x.Doc) {
+			itemConfig := GrizzlyConfigCollection{
+				Types: map[string]string{},
+				Package: f.Name.Name,
+				Methods: GetDefaultMethods(),
+			}
+
+			ast.Inspect(x, func (n ast.Node) bool {
+				switch x := n.(type) {
+				case *ast.Field:
+					switch y := x.Type.(type) {
+					case *ast.Ident:
+						itemConfig.Types[x.Names[0].Name] = y.Name
+					}
+				case *ast.Ident:
+					if itemConfig.Name == "" {
+						itemConfig.Name = x.Name
+					}
+				}
+
+				return true
+			})
+
+			config.Collections = append(config.Collections, itemConfig)
+		}
+
+		return true
+	})
+
+	return &config, nil
 }
