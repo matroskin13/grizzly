@@ -21,6 +21,18 @@ const (
 	MethodEach = "each"
 )
 
+const (
+	GrizzlyCollection = "Collection"
+	GrizzlyModel = "Model"
+
+	CommandReplaceName = "grizzly:replaceName"
+)
+
+type GrizzlyCommand struct {
+	Command string
+	Action string
+}
+
 func GetDefaultMethods() []string {
 	return []string {
 		MethodFind,
@@ -88,7 +100,9 @@ func GetCollectionCode() (result []byte, err error) {
 		return result, err
 	}
 
-	return result, err
+	code := RemovePackage(result)
+
+	return code, err
 }
 
 func CheckExistDir(path string) bool {
@@ -168,6 +182,9 @@ func GetMethodsCode(methods []string, types []GrizzlyType) (result []byte, err e
 		}
 	}
 
+	result = RemovePackage(result)
+	result = ReplaceImports(result)
+
 	return result, err
 }
 
@@ -182,18 +199,16 @@ func GenCollectionCode(config GrizzlyConfigCollection, isSimple bool) (result st
 	methodCode, err := GetMethodsCode(config.Methods, types)
 
 	code = append(code, methodCode...)
+	code = InjectImports(code, GetImportsByMethods(config.Methods))
+	code = append([]byte("package " + config.Package), code...)
+
+	code = GenCode(&config, code)
 
 	if err != nil {
 		return result, err
 	}
 
-	code = ReplaceModel(code, config.Name, config.Types, isSimple)
 	code = ReplaceSearchCallback(code, config.Name)
-	code = ReplaceCollection(code, config.Name)
-	code = ReplaceImports(code)
-	code = InjectImports(code, GetImportsByMethods(config.Methods))
-
-	code = append([]byte("package " + config.Package), code...)
 
 	return string(code), err
 }

@@ -15,7 +15,7 @@ func (a byGrizzlyIdDesc) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a byGrizzlyIdDesc) Less(i, j int) bool { return a[i].GrizzlyId > a[j].GrizzlyId }
 
 func (c *Collection) SortByGrizzlyId(mode string) *Collection {
-	collection := NewCollection(c.Items)
+	collection := &Collection{Items: c.Items}
 
 	if mode == "desc" {
 		sort.Sort(byGrizzlyIdDesc(collection.Items))
