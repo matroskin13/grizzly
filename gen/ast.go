@@ -36,20 +36,40 @@ func GetGrizzlyCommand(doc *ast.CommentGroup) map[string]GrizzlyCommand {
 	return commands
 }
 
-func GenCode(config *GrizzlyConfigCollection, code []byte) []byte {
+func GenCode(config *GrizzlyConfigCollection, code []byte, isSimple bool) []byte {
 	fset := token.NewFileSet()
 
 	f, _ := parser.ParseFile(fset, "main.go", code, parser.ParseComments)
 
 	ApplyCommands(f, config)
 	SwapTypes(f, config)
-	InjectTypes(f, config)
+
+	if isSimple == false {
+		InjectTypes(f, config)
+	} else {
+		RemoveType(f, config)
+	}
 
 	var buf bytes.Buffer
 
 	format.Node(&buf, fset, f)
 
 	return buf.Bytes()
+}
+
+func RemoveType(node *ast.File, config *GrizzlyConfigCollection) {
+	for key, decl := range node.Decls {
+		if x, ok := decl.(*ast.GenDecl); ok && x.Tok == token.TYPE {
+			if tSpec, ok := x.Specs[0].(*ast.TypeSpec); ok {
+				if _, ok := tSpec.Type.(*ast.StructType); tSpec.Name.Name == config.Name && ok {
+					copy(node.Decls[key:], node.Decls[key+1:])
+					node.Decls = node.Decls[:len(node.Decls)-1]
+
+					return
+				}
+			}
+		}
+	}
 }
 
 func ApplyCommands(node *ast.File, config *GrizzlyConfigCollection) *ast.File {

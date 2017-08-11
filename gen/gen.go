@@ -203,7 +203,7 @@ func GenCollectionCode(config GrizzlyConfigCollection, isSimple bool) (result st
 	code = InjectImports(code, GetImportsByMethods(config.Methods))
 	code = append([]byte("package " + config.Package), code...)
 
-	code = GenCode(&config, code)
+	code = GenCode(&config, code, isSimple)
 
 	if err != nil {
 		return result, err

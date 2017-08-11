@@ -117,7 +117,6 @@ var code2 =
 
 type Test struct {
 	One string
-	Two int
 }
 `
 
@@ -125,8 +124,7 @@ var expectedCode2 =
 `package test
 
 type Test struct {
-	Id    int
-	Email string
+	Id int
 }
 `
 
@@ -136,7 +134,6 @@ func TestInjectTypes(t *testing.T) {
 		Name: "Test",
 		Types: map[string]string{
 			"Id": "int",
-			"Email": "string",
 		},
 	}
 
