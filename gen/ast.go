@@ -24,7 +24,10 @@ func GetGrizzlyCommand(doc *ast.CommentGroup) map[string]GrizzlyCommand {
 			arr := strings.Split(comment.Text, " ")
 
 			command.Command = arr[0][2:]
-			command.Action = arr[1]
+
+			if len(arr) > 1 {
+				command.Action = arr[1]
+			}
 
 			commands[command.Command] = command
 		}

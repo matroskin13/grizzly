@@ -26,6 +26,7 @@ const (
 	GrizzlyModel = "Model"
 
 	CommandReplaceName = "grizzly:replaceName"
+	CommandGenerate    = "grizzly:generate"
 )
 
 type GrizzlyCommand struct {

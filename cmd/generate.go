@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"io/ioutil"
-	"go/ast"
 	"strings"
 )
 
@@ -18,20 +17,6 @@ func GenerateCommand() cli.Command {
 		Usage: "generate collection from file",
 		Action: generateAction,
 	}
-}
-
-func grizzlyComment(doc *ast.CommentGroup) bool {
-	if doc == nil {
-		return false
-	}
-
-	for _, comment := range doc.List {
-		if comment.Text == "//grizzly:generate" {
-			return true
-		}
-	}
-
-	return false
 }
 
 func generateAction(c *cli.Context) (err error) {

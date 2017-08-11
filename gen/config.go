@@ -44,30 +44,36 @@ func GetConfigByCode(code []byte) (*GrizzlyConfig, error) {
 	}
 
 	ast.Inspect(f, func (n ast.Node) bool {
-		if x, ok := n.(*ast.GenDecl); ok && x.Tok == token.TYPE && grizzlyComment(x.Doc) {
-			itemConfig := GrizzlyConfigCollection{
-				Types: map[string]string{},
-				Package: f.Name.Name,
-				Methods: GetDefaultMethods(),
-			}
+		x, ok := n.(*ast.GenDecl)
 
-			ast.Inspect(x, func (n ast.Node) bool {
-				switch x := n.(type) {
-				case *ast.Field:
-					switch y := x.Type.(type) {
-					case *ast.Ident:
-						itemConfig.Types[x.Names[0].Name] = y.Name
-					}
-				case *ast.Ident:
-					if itemConfig.Name == "" {
-						itemConfig.Name = x.Name
-					}
+		if ok && x.Tok == token.TYPE && x.Doc != nil {
+			_, isExist := GetGrizzlyCommand(x.Doc)[CommandGenerate]
+
+			if isExist {
+				itemConfig := GrizzlyConfigCollection{
+					Types: map[string]string{},
+					Package: f.Name.Name,
+					Methods: GetDefaultMethods(),
 				}
 
-				return true
-			})
+				ast.Inspect(x, func (n ast.Node) bool {
+					switch x := n.(type) {
+					case *ast.Field:
+						switch y := x.Type.(type) {
+						case *ast.Ident:
+							itemConfig.Types[x.Names[0].Name] = y.Name
+						}
+					case *ast.Ident:
+						if itemConfig.Name == "" {
+							itemConfig.Name = x.Name
+						}
+					}
 
-			config.Collections = append(config.Collections, itemConfig)
+					return true
+				})
+
+				config.Collections = append(config.Collections, itemConfig)
+			}
 		}
 
 		return true
