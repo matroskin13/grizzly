@@ -16,6 +16,7 @@ func Init() {
 	app.Commands = []cli.Command{
 		CreateCommand(),
 		UpdateCommand(),
+		GenerateCommand(),
 	}
 
 	app.Run(os.Args)

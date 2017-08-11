@@ -21,6 +21,19 @@ const (
 	MethodEach = "each"
 )
 
+const (
+	GrizzlyCollection = "Collection"
+	GrizzlyModel = "Model"
+
+	CommandReplaceName = "grizzly:replaceName"
+	CommandGenerate    = "grizzly:generate"
+)
+
+type GrizzlyCommand struct {
+	Command string
+	Action string
+}
+
 func GetDefaultMethods() []string {
 	return []string {
 		MethodFind,
@@ -88,7 +101,9 @@ func GetCollectionCode() (result []byte, err error) {
 		return result, err
 	}
 
-	return result, err
+	code := RemovePackage(result)
+
+	return code, err
 }
 
 func CheckExistDir(path string) bool {
@@ -111,9 +126,17 @@ func CheckExistFile(path string) bool {
 	}
 }
 
-func CreateCollection(modelName string, code string, isUpdate bool) error {
+func CreateCollection(modelName string, code string, isUpdate bool, savePath string) error {
+	var collectionPath string
+
 	pwd, _ := os.Getwd()
-	collectionPath := filepath.Join(pwd, "collections")
+
+	if savePath == "" {
+		collectionPath = filepath.Join(pwd, "collections")
+	} else {
+		collectionPath = savePath
+	}
+
 	filePath := filepath.Join(collectionPath, modelName + ".go");
 
 	if !CheckExistDir(collectionPath) {
@@ -160,10 +183,13 @@ func GetMethodsCode(methods []string, types []GrizzlyType) (result []byte, err e
 		}
 	}
 
+	result = RemovePackage(result)
+	result = ReplaceImports(result)
+
 	return result, err
 }
 
-func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error) {
+func GenCollectionCode(config GrizzlyConfigCollection, isSimple bool) (result string, err error) {
 	code, err := GetCollectionCode()
 	types := GenerateTypes(config.Types)
 
@@ -174,18 +200,16 @@ func GenCollectionCode(config GrizzlyConfigCollection) (result string, err error
 	methodCode, err := GetMethodsCode(config.Methods, types)
 
 	code = append(code, methodCode...)
+	code = InjectImports(code, GetImportsByMethods(config.Methods))
+	code = append([]byte("package " + config.Package), code...)
+
+	code = GenCode(&config, code)
 
 	if err != nil {
 		return result, err
 	}
 
-	code = ReplaceModel(code, config.Name, config.Types)
 	code = ReplaceSearchCallback(code, config.Name)
-	code = ReplaceCollection(code, config.Name)
-	code = ReplaceImports(code)
-	code = InjectImports(code, GetImportsByMethods(config.Methods))
-
-	code = append([]byte("package collections"), code...)
 
 	return string(code), err
 }

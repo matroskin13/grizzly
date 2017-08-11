@@ -37,13 +37,13 @@ func createAction(c *cli.Context) (err error) {
 		Methods: gen.GetDefaultMethods(),
 	}
 
-	code, err := gen.GenCollectionCode(collectionConfig)
+	code, err := gen.GenCollectionCode(collectionConfig, false)
 
 	if err != nil {
 		return cli.NewExitError(err, 0)
 	}
 
-	err = gen.CreateCollection(modelName, string(code), false)
+	err = gen.CreateCollection(modelName, string(code), false, "")
 
 	if err != nil {
 		return cli.NewExitError(err, 0)
