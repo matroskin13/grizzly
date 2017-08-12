@@ -1,3 +1,5 @@
-collections
+.DS_Store
+vendor
 .idea
+collections
 grizzly.json
