@@ -1,17 +1,60 @@
-# Grizzly codegen
+# Grizzly
 
 [![Build Status](https://travis-ci.org/matroskin13/grizzly.svg?branch=master)](https://travis-ci.org/matroskin13/grizzly)
 [![codecov](https://codecov.io/gh/matroskin13/grizzly/branch/master/graph/badge.svg)](https://codecov.io/gh/matroskin13/grizzly)
 
-## Generation of collections
+Grizzly allows you to use collections in GO without generics. With Grizzly you can use the methods Map, Filter, Find, etc.
+
+## Usage with generation
+
+Install Grizzly:
 
 ```bash
 $ go get github.com/matroskin13/grizzly
+```
 
-$ grizzly create user id:int name:string age:int
-or
-$ $GOPATH/bin/grizzly create users id:int name:string age:int
+And update your working file:
 
+```go
+//go:generate grizzly generate main.go
+
+package main
+
+import (
+    "fmt"
+)
+
+//grizzly:generate
+type User struct {
+    Id   int
+    Name string
+    Age  int
+}
+
+func main() {
+    users := NewUserCollection([]*User{
+        {Id: 1, Name: "John", Age: 20},
+        {Id: 2, Name: "Tom", Age: 22},
+        {Id: 3, Name: "Billy", Age: 20},
+        {Id: 4, Name: "Mister X", Age: 30},
+    })
+
+    youngUsers := users.Filter(func (user *User) bool {
+        return user.Age < 30
+    })
+
+    youngUsersIds := youngUsers.MapToInt(func (user *User) int {
+        return user.Id
+    })
+
+    fmt.Println("young users ids", youngUsersIds)
+}
+```
+
+And run go generate:
+
+```bash
+$ go generate
 ```
 
 ## Use of collections after generation
@@ -62,34 +105,6 @@ func main() {
     fmt.Println("uniq ages", uniqAges)
     fmt.Println("sorted ages", sortedAges)
 }
-```
-
-## Go generate
-
-```go
-package main
-
-//go:generate grizzly generate main.go
-
-//grizzly:generate
-type User struct {
-	Id   int
-	Name string
-	Age  int
-}
-
-func main() {
-    users := NewUserCollection([]*User{
-        {Id: 1, Name: "John", Age: 20},
-        {Id: 2, Name: "Tom", Age: 22},
-        {Id: 3, Name: "Billy", Age: 20},
-        {Id: 4, Name: "Mister X", Age: 30},
-    })
-}
-```
-
-```bash
-$ go generate
 ```
 
 ## Generate from config
