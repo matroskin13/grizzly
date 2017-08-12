@@ -143,6 +143,8 @@ List of default methods:  "find", "filter", "maps", "array", "get", "uniq", "sor
 
 The following methods will be available for the collection:
 
+grizzly.json
+
 ```json
 {
   "collections": [
@@ -154,6 +156,16 @@ The following methods will be available for the collection:
       }
     }
   ]
+}
+```
+
+by go generate
+
+```go
+//grizzly:generate
+type User struct {
+	Id   int
+	Name string
 }
 ```
 
