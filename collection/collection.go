@@ -1,6 +1,9 @@
 package collection
 
-type Model struct {GrizzlyId int; GrizzlyName string}
+type Model struct {
+	GrizzlyId   int
+	GrizzlyName string
+}
 
 type Collection struct {
 	Items []*Model

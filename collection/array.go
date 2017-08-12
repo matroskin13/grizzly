@@ -7,15 +7,15 @@ func (c *Collection) Push(item *Model) *Collection {
 }
 
 func (c *Collection) Shift() *Model {
-	item := c.Items[0];
-	c.Items = c.Items[1:];
+	item := c.Items[0]
+	c.Items = c.Items[1:]
 
 	return item
 }
 
 func (c *Collection) Pop() *Model {
-	item := c.Items[len(c.Items) - 1];
-	c.Items = c.Items[:len(c.Items) - 1];
+	item := c.Items[len(c.Items)-1]
+	c.Items = c.Items[:len(c.Items)-1]
 
 	return item
 }

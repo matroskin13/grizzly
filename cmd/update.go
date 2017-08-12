@@ -1,22 +1,23 @@
 package cmd
 
 import (
-	"strings"
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"io/ioutil"
-	"encoding/json"
+	"strings"
 
 	"github.com/urfave/cli"
+
 	"github.com/matroskin13/grizzly/gen"
 )
 
 func UpdateCommand() cli.Command {
-	return cli.Command {
-		Name: "update",
+	return cli.Command{
+		Name:    "update",
 		Aliases: []string{"u"},
-		Usage: "update collections by config",
-		Action: updateAction,
+		Usage:   "update collections by config",
+		Action:  updateAction,
 	}
 }
 

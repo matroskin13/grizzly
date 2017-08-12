@@ -2,6 +2,7 @@ package collection
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +24,6 @@ func TestNewCollection(t *testing.T) {
 
 	assert.Equal(t, expected, collection)
 }
-
 
 func TestNewEmptyCollection(t *testing.T) {
 	collection := NewEmptyCollection()

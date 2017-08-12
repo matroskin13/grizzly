@@ -5,10 +5,9 @@ import (
 	"strings"
 )
 
-
 func ReplaceSearchCallback(code []byte, modelName string) []byte {
 	rSearchCallback, _ := regexp.Compile("SearchCallback")
-	result := rSearchCallback.ReplaceAll(code, []byte("SearchCallback" + strings.Title(modelName)))
+	result := rSearchCallback.ReplaceAll(code, []byte("SearchCallback"+strings.Title(modelName)))
 
 	return result
 }
@@ -39,7 +38,7 @@ func InjectImports(code []byte, imports []string) (result []byte) {
 	result = code[:]
 
 	for _, i := range imports {
-		result = append([]byte("\nimport \"" + i + "\"\n"), code...)
+		result = append([]byte("\nimport \""+i+"\"\n"), code...)
 	}
 
 	return result

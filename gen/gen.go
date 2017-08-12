@@ -1,29 +1,29 @@
 package gen
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
-	"errors"
 )
 
 const GithubRepo = "github.com/matroskin13/grizzly"
 
 const (
-	MethodFind = "find"
+	MethodFind   = "find"
 	MethodFilter = "filter"
-	MethodMaps = "maps"
-	MethodArray = "array"
-	MethodGet = "get"
-	MethodUniq = "uniq"
-	MethodSort = "sort"
-	MethodEach = "each"
+	MethodMaps   = "maps"
+	MethodArray  = "array"
+	MethodGet    = "get"
+	MethodUniq   = "uniq"
+	MethodSort   = "sort"
+	MethodEach   = "each"
 )
 
 const (
 	GrizzlyCollection = "Collection"
-	GrizzlyModel = "Model"
+	GrizzlyModel      = "Model"
 
 	CommandReplaceName = "grizzly:replaceName"
 	CommandGenerate    = "grizzly:generate"
@@ -31,11 +31,11 @@ const (
 
 type GrizzlyCommand struct {
 	Command string
-	Action string
+	Action  string
 }
 
 func GetDefaultMethods() []string {
-	return []string {
+	return []string{
 		MethodFind,
 		MethodFilter,
 		MethodMaps,
@@ -137,7 +137,7 @@ func CreateCollection(modelName string, code string, isUpdate bool, savePath str
 		collectionPath = savePath
 	}
 
-	filePath := filepath.Join(collectionPath, modelName + ".go");
+	filePath := filepath.Join(collectionPath, modelName+".go")
 
 	if !CheckExistDir(collectionPath) {
 		os.Mkdir(collectionPath, os.ModePerm)
@@ -164,7 +164,7 @@ func GetMethodsCode(methods []string, types []GrizzlyType) (result []byte, err e
 	}
 
 	for _, v := range methods {
-		methodPath := filepath.Join(collectionDir, v + ".go")
+		methodPath := filepath.Join(collectionDir, v+".go")
 
 		bytes, err := ioutil.ReadFile(methodPath)
 
@@ -201,7 +201,7 @@ func GenCollectionCode(config GrizzlyConfigCollection, isSimple bool) (result st
 
 	code = append(code, methodCode...)
 	code = InjectImports(code, GetImportsByMethods(config.Methods))
-	code = append([]byte("package " + config.Package), code...)
+	code = append([]byte("package "+config.Package), code...)
 
 	code = GenCode(&config, code, isSimple)
 

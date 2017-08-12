@@ -2,11 +2,12 @@ package collection
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCollection_MapToInt(t *testing.T) {
-	items := GetCollection().MapToInt(func (item *Model) int {
+	items := GetCollection().MapToInt(func(item *Model) int {
 		return item.GrizzlyId
 	})
 
@@ -14,10 +15,9 @@ func TestCollection_MapToInt(t *testing.T) {
 }
 
 func TestCollection_MapToString(t *testing.T) {
-	items := GetCollection().MapToString(func (item *Model) string {
+	items := GetCollection().MapToString(func(item *Model) string {
 		return item.GrizzlyName
 	})
 
 	assert.Equal(t, items, []string{"item1", "item2", "item3", "item4"})
 }
-

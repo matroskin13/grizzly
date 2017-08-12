@@ -1,18 +1,17 @@
 package gen
 
 import (
-	"go/ast"
-	"go/token"
-	"go/parser"
-	"go/format"
 	"bytes"
+	"go/ast"
+	"go/format"
+	"go/parser"
+	"go/token"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var code =
-`package test
+var code = `package test
 
 //grizzly:replaceName Get{{.Name}}
 func GetChicken() {}
@@ -21,8 +20,7 @@ func GetChicken() {}
 func GetPig() {}
 `
 
-var expectedCode =
-`package test
+var expectedCode = `package test
 
 //grizzly:replaceName Get{{.Name}}
 func GetTest() {}
@@ -53,7 +51,7 @@ func TestGetGrizzlyCommand(t *testing.T) {
 	expected := map[string]GrizzlyCommand{
 		"grizzly:replaceName": GrizzlyCommand{
 			Command: "grizzly:replaceName",
-			Action: "Get{{.Name}}",
+			Action:  "Get{{.Name}}",
 		},
 	}
 
@@ -71,8 +69,7 @@ func TestApplyCommands(t *testing.T) {
 	assert.Equal(t, expectedCode, result)
 }
 
-var code1 =
-`package test
+var code1 = `package test
 
 type Model struct{}
 type Collection struct{}
@@ -86,8 +83,7 @@ func GetCollection(arg *TestCollection) *Collection {
 }
 `
 
-var expectedCode1 =
-`package test
+var expectedCode1 = `package test
 
 type Test struct{}
 type TestCollection struct{}
@@ -112,16 +108,14 @@ func TestSwapTypes(t *testing.T) {
 	assert.Equal(t, expectedCode1, result)
 }
 
-var code2 =
-`package test
+var code2 = `package test
 
 type Test struct {
 	One string
 }
 `
 
-var expectedCode2 =
-`package test
+var expectedCode2 = `package test
 
 type Test struct {
 	Id int

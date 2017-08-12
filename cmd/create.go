@@ -9,17 +9,17 @@ import (
 )
 
 func CreateCommand() cli.Command {
-	return cli.Command {
-		Name: "create",
+	return cli.Command{
+		Name:    "create",
 		Aliases: []string{"c"},
-		Usage: "create model and collection by name",
-		Action: createAction,
+		Usage:   "create model and collection by name",
+		Action:  createAction,
 	}
 }
 
 func createAction(c *cli.Context) (err error) {
 	types := map[string]string{}
-	modelName := strings.ToLower(c.Args().First());
+	modelName := strings.ToLower(c.Args().First())
 
 	for _, blob := range c.Args().Tail() {
 		blobTypes := strings.Split(blob, ":")
@@ -32,8 +32,8 @@ func createAction(c *cli.Context) (err error) {
 	}
 
 	collectionConfig := gen.GrizzlyConfigCollection{
-		Types: types,
-		Name: modelName,
+		Types:   types,
+		Name:    modelName,
 		Methods: gen.GetDefaultMethods(),
 	}
 

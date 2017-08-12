@@ -36,7 +36,7 @@ func GoGo() {
 			{
 				Name: "User",
 				Types: map[string]string{
-					"Id": "int",
+					"Id":    "int",
 					"Email": "string",
 				},
 				Package: "test",

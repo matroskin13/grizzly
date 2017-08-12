@@ -1,21 +1,22 @@
 package cmd
 
 import (
-	"github.com/matroskin13/grizzly/gen"
-	"github.com/urfave/cli"
-
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"io/ioutil"
 	"strings"
+
+	"github.com/urfave/cli"
+
+	"github.com/matroskin13/grizzly/gen"
 )
 
 func GenerateCommand() cli.Command {
-	return cli.Command {
-		Name: "generate",
+	return cli.Command{
+		Name:    "generate",
 		Aliases: []string{"g"},
-		Usage: "generate collection from file",
-		Action: generateAction,
+		Usage:   "generate collection from file",
+		Action:  generateAction,
 	}
 }
 
@@ -47,7 +48,7 @@ func generateAction(c *cli.Context) (err error) {
 			return cli.NewExitError(err, 0)
 		}
 
-		err = gen.CreateCollection(strings.ToLower(collection.Name) + "_collection", code, true, pwd)
+		err = gen.CreateCollection(strings.ToLower(collection.Name)+"_collection", code, true, pwd)
 
 		if err != nil {
 			return cli.NewExitError(err, 0)

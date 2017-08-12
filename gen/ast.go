@@ -1,13 +1,13 @@
 package gen
 
 import (
+	"bytes"
 	"go/ast"
+	"go/format"
 	"go/parser"
 	"go/token"
-	"go/format"
-	"text/template"
-	"bytes"
 	"strings"
+	"text/template"
 )
 
 // Return grizzly commands by comments of code. Example:
@@ -73,7 +73,7 @@ func RemoveType(node *ast.File, config *GrizzlyConfigCollection) {
 }
 
 func ApplyCommands(node *ast.File, config *GrizzlyConfigCollection) *ast.File {
-	ast.Inspect(node, func (n ast.Node) bool {
+	ast.Inspect(node, func(n ast.Node) bool {
 		switch x := n.(type) {
 		case *ast.FuncDecl:
 			commands := make(map[string]GrizzlyCommand)
@@ -101,7 +101,7 @@ func ApplyCommands(node *ast.File, config *GrizzlyConfigCollection) *ast.File {
 
 // Replaces grizzly Model and Collection
 func SwapTypes(node *ast.File, config *GrizzlyConfigCollection) {
-	ast.Inspect(node, func (n ast.Node) bool {
+	ast.Inspect(node, func(n ast.Node) bool {
 		switch x := n.(type) {
 		case *ast.Ident:
 			if x.Name == GrizzlyCollection {
@@ -118,7 +118,7 @@ func SwapTypes(node *ast.File, config *GrizzlyConfigCollection) {
 }
 
 func InjectTypes(node *ast.File, config *GrizzlyConfigCollection) {
-	ast.Inspect(node, func (n ast.Node) bool {
+	ast.Inspect(node, func(n ast.Node) bool {
 		if x, ok := n.(*ast.GenDecl); ok && x.Tok == token.TYPE {
 			if tSpec, ok := x.Specs[0].(*ast.TypeSpec); ok {
 				if sType, ok := tSpec.Type.(*ast.StructType); tSpec.Name.Name == config.Name && ok {
@@ -129,7 +129,7 @@ func InjectTypes(node *ast.File, config *GrizzlyConfigCollection) {
 
 						sType.Fields.List = append(sType.Fields.List, &ast.Field{
 							Names: []*ast.Ident{ast.NewIdent(typeName)},
-							Type: ast.NewIdent(customType),
+							Type:  ast.NewIdent(customType),
 						})
 					}
 				}
@@ -139,4 +139,3 @@ func InjectTypes(node *ast.File, config *GrizzlyConfigCollection) {
 		return true
 	})
 }
-

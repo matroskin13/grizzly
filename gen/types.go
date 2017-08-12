@@ -3,9 +3,9 @@ package gen
 import "strings"
 
 type GrizzlyType struct {
-	Name string
-	Value string
-	IsPointer bool
+	Name        string
+	Value       string
+	IsPointer   bool
 	IsPrimitive bool
 }
 
@@ -32,7 +32,7 @@ func GenerateTypes(configTypes map[string]string) []GrizzlyType {
 
 	for key, value := range configTypes {
 		var customType = GrizzlyType{
-			Name: key,
+			Name:  key,
 			Value: value,
 		}
 

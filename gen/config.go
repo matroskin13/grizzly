@@ -2,8 +2,8 @@ package gen
 
 import (
 	"go/ast"
-	"go/token"
 	"go/parser"
+	"go/token"
 )
 
 func grizzlyComment(doc *ast.CommentGroup) bool {
@@ -21,8 +21,8 @@ func grizzlyComment(doc *ast.CommentGroup) bool {
 }
 
 type GrizzlyConfigCollection struct {
-	Name string `json:"name"`
-	Types map[string]string `json:"types"`
+	Name    string            `json:"name"`
+	Types   map[string]string `json:"types"`
 	Methods []string
 	Package string
 }
@@ -43,7 +43,7 @@ func GetConfigByCode(code []byte) (*GrizzlyConfig, error) {
 		return nil, err
 	}
 
-	ast.Inspect(f, func (n ast.Node) bool {
+	ast.Inspect(f, func(n ast.Node) bool {
 		x, ok := n.(*ast.GenDecl)
 
 		if ok && x.Tok == token.TYPE && x.Doc != nil {
@@ -51,12 +51,12 @@ func GetConfigByCode(code []byte) (*GrizzlyConfig, error) {
 
 			if isExist {
 				itemConfig := GrizzlyConfigCollection{
-					Types: map[string]string{},
+					Types:   map[string]string{},
 					Package: f.Name.Name,
 					Methods: GetDefaultMethods(),
 				}
 
-				ast.Inspect(x, func (n ast.Node) bool {
+				ast.Inspect(x, func(n ast.Node) bool {
 					switch x := n.(type) {
 					case *ast.Field:
 						switch y := x.Type.(type) {
