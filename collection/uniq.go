@@ -1,7 +1,7 @@
 package collection
 
 func (c *Collection) UniqByGrizzlyId() *Collection {
-	collection := NewCollection([]*Model{})
+	collection := &Collection{}
 
 	for _, item := range c.Items {
 		searchItem := collection.Find(func (model *Model) bool {

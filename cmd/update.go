@@ -2,8 +2,12 @@ package cmd
 
 import (
 	"strings"
-	"github.com/urfave/cli"
+	"os"
+	"path/filepath"
+	"io/ioutil"
+	"encoding/json"
 
+	"github.com/urfave/cli"
 	"github.com/matroskin13/grizzly/gen"
 )
 
@@ -17,13 +21,27 @@ func UpdateCommand() cli.Command {
 }
 
 func updateAction(c *cli.Context) (err error) {
-	config, err := gen.GetConfig()
+	var config gen.GrizzlyConfig
 
-	if err != nil || config == nil {
+	currentPath, _ := os.Getwd()
+	fullPwd := filepath.Join(currentPath, "grizzly.json")
+
+	bytes, err := ioutil.ReadFile(fullPwd)
+
+	if err != nil {
+		return cli.NewExitError(err, 0)
+	}
+
+	err = json.Unmarshal(bytes, &config)
+
+	if err != nil {
 		return cli.NewExitError("config is not readable", 0)
 	}
 
 	for _, collection := range config.Collections {
+		collection.Package = "collections"
+		collection.Name = strings.Title(collection.Name)
+
 		if collection.Name == "" {
 			return cli.NewExitError("collection name is empty", 0)
 		}
@@ -32,13 +50,13 @@ func updateAction(c *cli.Context) (err error) {
 			collection.Methods = gen.GetDefaultMethods()
 		}
 
-		code, err := gen.GenCollectionCode(collection)
+		code, err := gen.GenCollectionCode(collection, false)
 
 		if err != nil {
 			return cli.NewExitError(err, 0)
 		}
 
-		err = gen.CreateCollection(strings.ToLower(collection.Name), code, true)
+		err = gen.CreateCollection(strings.ToLower(collection.Name), code, true, "")
 
 		if err != nil {
 			return cli.NewExitError(err, 0)
