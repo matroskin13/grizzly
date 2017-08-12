@@ -163,7 +163,7 @@ grizzly.json
 {
   "collections": [
     {
-      "name": "Users",
+      "name": "user",
       "types": {
         "id": "int",
         "name": "string"
@@ -184,49 +184,38 @@ type User struct {
 ```
 
 ```go
-type SearchCallbackUsers func(item *Users) bool
-
-type Users struct {
-    Id   int
-    Name string
-}
-
-type UsersCollection struct {
-    Items []*Users
-}
-
-func NewUsersCollection(items []*Users) *UsersCollection
+func NewUserCollection(items []*User) *UserCollection
 func NewEmptyUserCollection() *UserCollection
 
 func (c *UserCollection) Len() int
 
 func (c *UserCollection) ForEach(callback func(item *User))
 
-func (c *UsersCollection) Filter(callback SearchCallbackUsers) *UsersCollection
+func (c *UserCollection) Filter(callback SearchCallbackUser) *UserCollection
 
-func (c *UsersCollection) Find(callback SearchCallbackUsers) *Users
+func (c *UserCollection) Find(callback SearchCallbackUser) *User
 
-func (c *UsersCollection) Get(index int) (model *Users)
+func (c *UserCollection) Get(index int) (model *User)
 
-func (c *UsersCollection) MapToInt(callback func(item *Users) int) []int
+func (c *UserCollection) MapToInt(callback func(item *User) int) []int
 
-func (c *UsersCollection) MapToString(callback func(item *Users) string) []string
+func (c *UserCollection) MapToString(callback func(item *User) string) []string
 
-func (c *UsersCollection) Pop() *Users
+func (c *UserCollection) Pop() *User
 
-func (c *UsersCollection) Push(item *Users) *UsersCollection
+func (c *UserCollection) Push(item *User) *UserCollection
 
-func (c *UsersCollection) Shift() *Users
+func (c *UserCollection) Shift() *User
 
-func (c *UsersCollection) SortById(mode string) *UsersCollection
+func (c *UserCollection) SortById(mode string) *UserCollection
 
-func (c *UsersCollection) SortByName(mode string) *UsersCollection
+func (c *UserCollection) SortByName(mode string) *UserCollection
 
-func (c *UsersCollection) UniqById() *UsersCollection
+func (c *UserCollection) UniqById() *UserCollection
 
-func (c *UsersCollection) UniqByName() *UsersCollection
+func (c *UserCollection) UniqByName() *UserCollection
 
-func (c *UsersCollection) Unshift(item *Users) *UsersCollection
+func (c *UserCollection) Unshift(item *User) *UserCollection
 
-func (c *Collection) ForEach(callback func(item *Model))
+func (c *UserCollection) ForEach(callback func(item *User))
 ```
