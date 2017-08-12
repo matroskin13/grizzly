@@ -1,23 +1,96 @@
-# Grizzly codegen
+# Grizzly
 
 [![Build Status](https://travis-ci.org/matroskin13/grizzly.svg?branch=master)](https://travis-ci.org/matroskin13/grizzly)
 [![codecov](https://codecov.io/gh/matroskin13/grizzly/branch/master/graph/badge.svg)](https://codecov.io/gh/matroskin13/grizzly)
 
-## Generation of collections
+Grizzly allows you to use collections in GO without generics. With Grizzly you can use the methods Map, Filter, Find, etc.
+
+## Usage with generation
+
+Install Grizzly:
 
 ```bash
 $ go get github.com/matroskin13/grizzly
-
-$ grizzly create user id:int name:string age:int
-or
-$ $GOPATH/bin/grizzly create users id:int name:string age:int
-
 ```
 
-## Use of collections after generation
+And update your working file:
 
 ```go
+//go:generate grizzly generate main.go
 
+package main
+
+import (
+    "fmt"
+)
+
+//grizzly:generate
+type User struct {
+    Id   int
+    Name string
+    Age  int
+}
+
+func main() {
+    users := NewUserCollection([]*User{
+        {Id: 1, Name: "John", Age: 20},
+        {Id: 2, Name: "Tom", Age: 22},
+        {Id: 3, Name: "Billy", Age: 20},
+        {Id: 4, Name: "Mister X", Age: 30},
+    })
+
+    youngUsers := users.Filter(func (user *User) bool {
+        return user.Age < 30
+    })
+
+    youngUsersIds := youngUsers.MapToInt(func (user *User) int {
+        return user.Id
+    })
+
+    fmt.Println("young users ids", youngUsersIds)
+}
+```
+
+And run go generate:
+
+```bash
+$ go generate
+```
+
+## Generate from config
+
+Create file grizzly.json in your root directory
+
+```json
+{
+  "collections": [
+    {
+      "name": "user",
+      "types": {
+        "id": "int",
+        "name": "string",
+        "age": "int"
+      }
+    },
+    {
+      "name": "city",
+      "types": {
+        "cityId": "int"
+      }
+    }
+  ]
+}
+```
+
+And run Grizzly
+
+```bash
+$ grizzly update
+```
+
+Now you can use the collection code:
+
+```go
 package test
 
 import (
@@ -64,65 +137,6 @@ func main() {
 }
 ```
 
-## Go generate
-
-```go
-package main
-
-//go:generate grizzly generate main.go
-
-//grizzly:generate
-type User struct {
-	Id   int
-	Name string
-	Age  int
-}
-
-func main() {
-    users := NewUserCollection([]*User{
-        {Id: 1, Name: "John", Age: 20},
-        {Id: 2, Name: "Tom", Age: 22},
-        {Id: 3, Name: "Billy", Age: 20},
-        {Id: 4, Name: "Mister X", Age: 30},
-    })
-}
-```
-
-```bash
-$ go generate
-```
-
-## Generate from config
-
-Create a file grizzly.json in your root directory
-
-```json
-{
-  "collections": [
-    {
-      "name": "user",
-      "types": {
-        "id": "int",
-        "name": "string",
-        "age": "int"
-      }
-    },
-    {
-      "name": "city",
-      "types": {
-        "cityId": "int"
-      }
-    }
-  ]
-}
-```
-
-And run the grizzly
-
-```bash
-$ grizzly update
-```
-
 You can also specify the required methods:
 
 ```json
@@ -149,7 +163,7 @@ grizzly.json
 {
   "collections": [
     {
-      "name": "Users",
+      "name": "user",
       "types": {
         "id": "int",
         "name": "string"
@@ -170,49 +184,38 @@ type User struct {
 ```
 
 ```go
-type SearchCallbackUsers func(item *Users) bool
-
-type Users struct {
-    Id   int
-    Name string
-}
-
-type UsersCollection struct {
-    Items []*Users
-}
-
-func NewUsersCollection(items []*Users) *UsersCollection
+func NewUserCollection(items []*User) *UserCollection
 func NewEmptyUserCollection() *UserCollection
 
 func (c *UserCollection) Len() int
 
 func (c *UserCollection) ForEach(callback func(item *User))
 
-func (c *UsersCollection) Filter(callback SearchCallbackUsers) *UsersCollection
+func (c *UserCollection) Filter(callback SearchCallbackUser) *UserCollection
 
-func (c *UsersCollection) Find(callback SearchCallbackUsers) *Users
+func (c *UserCollection) Find(callback SearchCallbackUser) *User
 
-func (c *UsersCollection) Get(index int) (model *Users)
+func (c *UserCollection) Get(index int) (model *User)
 
-func (c *UsersCollection) MapToInt(callback func(item *Users) int) []int
+func (c *UserCollection) MapToInt(callback func(item *User) int) []int
 
-func (c *UsersCollection) MapToString(callback func(item *Users) string) []string
+func (c *UserCollection) MapToString(callback func(item *User) string) []string
 
-func (c *UsersCollection) Pop() *Users
+func (c *UserCollection) Pop() *User
 
-func (c *UsersCollection) Push(item *Users) *UsersCollection
+func (c *UserCollection) Push(item *User) *UserCollection
 
-func (c *UsersCollection) Shift() *Users
+func (c *UserCollection) Shift() *User
 
-func (c *UsersCollection) SortById(mode string) *UsersCollection
+func (c *UserCollection) SortById(mode string) *UserCollection
 
-func (c *UsersCollection) SortByName(mode string) *UsersCollection
+func (c *UserCollection) SortByName(mode string) *UserCollection
 
-func (c *UsersCollection) UniqById() *UsersCollection
+func (c *UserCollection) UniqById() *UserCollection
 
-func (c *UsersCollection) UniqByName() *UsersCollection
+func (c *UserCollection) UniqByName() *UserCollection
 
-func (c *UsersCollection) Unshift(item *Users) *UsersCollection
+func (c *UserCollection) Unshift(item *User) *UserCollection
 
-func (c *Collection) ForEach(callback func(item *Model))
+func (c *UserCollection) ForEach(callback func(item *User))
 ```
