@@ -57,10 +57,40 @@ And run go generate:
 $ go generate
 ```
 
-## Use of collections after generation
+## Generate from config
+
+Create a file grizzly.json in your root directory
+
+```json
+{
+  "collections": [
+    {
+      "name": "user",
+      "types": {
+        "id": "int",
+        "name": "string",
+        "age": "int"
+      }
+    },
+    {
+      "name": "city",
+      "types": {
+        "cityId": "int"
+      }
+    }
+  ]
+}
+```
+
+And run the grizzly
+
+```bash
+$ grizzly update
+```
+
+Now you can use the collection code:
 
 ```go
-
 package test
 
 import (
@@ -105,37 +135,6 @@ func main() {
     fmt.Println("uniq ages", uniqAges)
     fmt.Println("sorted ages", sortedAges)
 }
-```
-
-## Generate from config
-
-Create a file grizzly.json in your root directory
-
-```json
-{
-  "collections": [
-    {
-      "name": "user",
-      "types": {
-        "id": "int",
-        "name": "string",
-        "age": "int"
-      }
-    },
-    {
-      "name": "city",
-      "types": {
-        "cityId": "int"
-      }
-    }
-  ]
-}
-```
-
-And run the grizzly
-
-```bash
-$ grizzly update
 ```
 
 You can also specify the required methods:
