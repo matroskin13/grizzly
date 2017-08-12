@@ -59,7 +59,7 @@ $ go generate
 
 ## Generate from config
 
-Create a file grizzly.json in your root directory
+Create file grizzly.json in your root directory
 
 ```json
 {
@@ -82,7 +82,7 @@ Create a file grizzly.json in your root directory
 }
 ```
 
-And run the grizzly
+And run Grizzly
 
 ```bash
 $ grizzly update
