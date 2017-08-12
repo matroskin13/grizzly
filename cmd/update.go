@@ -39,6 +39,9 @@ func updateAction(c *cli.Context) (err error) {
 	}
 
 	for _, collection := range config.Collections {
+		collection.Package = "collections"
+		collection.Name = strings.Title(collection.Name)
+
 		if collection.Name == "" {
 			return cli.NewExitError("collection name is empty", 0)
 		}

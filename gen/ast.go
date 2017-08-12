@@ -125,8 +125,10 @@ func InjectTypes(node *ast.File, config *GrizzlyConfigCollection) {
 					sType.Fields.List = []*ast.Field{}
 
 					for key, customType := range config.Types {
+						typeName := strings.Title(key)
+
 						sType.Fields.List = append(sType.Fields.List, &ast.Field{
-							Names: []*ast.Ident{ast.NewIdent(key)},
+							Names: []*ast.Ident{ast.NewIdent(typeName)},
 							Type: ast.NewIdent(customType),
 						})
 					}
