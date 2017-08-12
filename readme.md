@@ -64,6 +64,34 @@ func main() {
 }
 ```
 
+## Go generate
+
+```go
+package main
+
+//go:generate grizzly generate main.go
+
+//grizzly:generate
+type User struct {
+	Id   int
+	Name string
+	Age  int
+}
+
+func main() {
+    users := NewUserCollection([]*User{
+        {Id: 1, Name: "John", Age: 20},
+        {Id: 2, Name: "Tom", Age: 22},
+        {Id: 3, Name: "Billy", Age: 20},
+        {Id: 4, Name: "Mister X", Age: 30},
+    })
+}
+```
+
+```bash
+$ go generate
+```
+
 ## Generate from config
 
 Create a file grizzly.json in your root directory
@@ -142,6 +170,11 @@ type UsersCollection struct {
 }
 
 func NewUsersCollection(items []*Users) *UsersCollection
+func NewEmptyUserCollection() *UserCollection
+
+func (c *UserCollection) Len() int
+
+func (c *UserCollection) ForEach(callback func(item *User))
 
 func (c *UsersCollection) Filter(callback SearchCallbackUsers) *UsersCollection
 
