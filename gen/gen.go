@@ -18,6 +18,7 @@ const (
 	MethodGet    = "get"
 	MethodUniq   = "uniq"
 	MethodSort   = "sort"
+	MethodQsort  = "qsort"
 	MethodEach   = "each"
 )
 
@@ -43,6 +44,7 @@ func GetDefaultMethods() []string {
 		MethodGet,
 		MethodUniq,
 		MethodSort,
+		MethodQsort,
 		MethodEach,
 	}
 }

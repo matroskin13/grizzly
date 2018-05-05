@@ -151,7 +151,7 @@ You can also specify the required methods:
 }
 ```
 
-List of default methods:  "find", "filter", "maps", "array", "get", "uniq", "sort"
+List of default methods:  "find", "filter", "maps", "array", "get", "uniq", "sort", "qsort"
 
 ## Methods of collection
 
@@ -210,6 +210,8 @@ func (c *UserCollection) Shift() *User
 func (c *UserCollection) SortById(mode string) *UserCollection
 
 func (c *UserCollection) SortByName(mode string) *UserCollection
+
+func (c *UserCollection) Sort(comparator func(a *Model, b *Model) int) *UserCollection
 
 func (c *UserCollection) UniqById() *UserCollection
 
